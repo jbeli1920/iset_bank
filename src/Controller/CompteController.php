@@ -10,7 +10,7 @@ use App\Entity\Utilisateur;
 class CompteController extends AbstractController
 {
     /**
-     * @Route("/compte/accepter/{id}", name="app_compte")
+     * @Route("/compte/accepter/{id}")
      */
     public function accepter_compte(int $id): Response
     {
@@ -21,7 +21,7 @@ class CompteController extends AbstractController
     }
 
     /**
-     * @Route("/compte/modifier/{id}", name="app_compte")
+     * @Route("/compte/modifier/{id}")
      */
     public function modifier_compte(int $id): Response
     {
@@ -33,7 +33,7 @@ class CompteController extends AbstractController
 
 
      /**
-     * @Route("/compte/supprimer/{id}", name="app_compte")
+     * @Route("/compte/supprimer/{id}")
      */
     public function supprimer_compte(int $id): Response
     {
@@ -41,7 +41,7 @@ class CompteController extends AbstractController
             'controller_name' => 'CompteController',
         ]);
     }
- /**
+    /**
      * @Route("/compte/affiche")
      */
     public function affiche_les_compte()
