@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Verification email</title>
+
+{% block stylesheets %}
+    <link href="{{ asset('styles/signup.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+</head>
+
+
+<body>
+<br><br><br>
+
+<h2 class="text-center">Verification Email</h2>
+
+{% if erreur is defined %}
+    <h5 class="text-danger text-center">{{ erreur }}</h5>
+{% endif %}
+
+{% if not erreur is defined %}
+    <h5 class="text-success text-center">Votre email a été vérifié avec succès.</h5>
+    <p class="text-center">Une demande d'activation de compte a été envoyée aux administrateurs. Lorsque votre demande sera acceptée, vous pourrez utiliser l'application <span class="text-success">ISET BANK</span></p>
+{% endif %}
+
+
+
+</body>
+
+
+
+</html>

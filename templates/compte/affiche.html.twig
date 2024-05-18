@@ -4,10 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Espace Administration
+    Tous les comptes
   </title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
    {% block stylesheets %}
@@ -78,7 +76,7 @@
         </li>
         
         <li class="nav-item">
-          <a class="nav-link text-white ">
+          <a class="nav-link text-white " href="/authentication/login">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">logout</i>
             </div>
@@ -150,6 +148,7 @@
                     {% endfor %}
                 </table>
               </div>
+              
             </div>
           </div>
         </div>
@@ -157,5 +156,4 @@
     </div>
   </main>
 </body>
-
 </html>

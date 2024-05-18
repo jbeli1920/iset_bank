@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Verification email</title>
+
+{% block stylesheets %}
+    <link href="{{ asset('styles/signup.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+</head>
+
+
+<body>
+<br><br><br>
+
+<h2 class="text-center">Verification Email</h2>
+
+{% if erreur_email is defined %}
+    <p class="text-center">{{ erreur_email }}<p>
+{% endif %}
+
+{% if erreur_email is not defined %}
+    <p class="text-center">Veuillez vérifier votre adresse e-mail en cliquant sur le lien qui vous a été envoyé sur<p>
+    <p class="text-center text-success text-gradient">{{ email }}</p>
+{% endif %}
+
+
+
+</body>
+
+
+
+</html>
