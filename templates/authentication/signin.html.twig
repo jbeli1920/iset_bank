@@ -39,6 +39,11 @@
                     <span class="text-white">{{ login_error }}</span>
                   </div>
                 {% endif %}
+                {% if non_confirme is defined %}
+                  <div class="alert alert-danger">
+                    <span class="text-white">{{ non_confirme }}</span>
+                  </div>
+                {% endif %}
                 {{ form_start(form) }}
                   <div class="input-group input-group-outline my-3">
                     {{ form_widget(form.email, { 'attr': {'class': 'form-control', 'placeholder': 'Email' } }) }}

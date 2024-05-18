@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CompteBancaire;
 use App\Entity\Utilisateur;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ class AuthenticationController extends AbstractController
          /**
          * @Route("/authentication/login")
          */
-    public function login(Request $request, ValidatorInterface $validator)
+    public function login(Request $request)
     {
         $utilisateur = new Utilisateur();
 
@@ -55,13 +56,18 @@ class AuthenticationController extends AbstractController
             ->findOneBy(array('email'=> $utilisateur->getEmail(), 'mot_de_passe'=> $utilisateur->getMotDePasse()));
             if (!$utilisateur_a_connecter) {
                 return $this->render("authentication/signin.html.twig", [
-            'form' => $form->createView(),
-            'errors' => $errors,
-            'login_error' => "Email out mot de passe incorrect"
-        ]);
+                'form' => $form->createView(),
+                'errors' => $errors,
+                'login_error' => "Email out mot de passe incorrect"
+                ]);
             } else {
                 if ($utilisateur_a_connecter->get_email_confirme() == 0) return $this->redirect("http://localhost:8000/authentication/verif_email/" . $utilisateur_a_connecter->getEmail());
-                return new Response("Yes");
+                if ($utilisateur_a_connecter->getCompteBancaire()->getConfirme() == 0)  return $this->render("authentication/signin.html.twig", [
+                    'form' => $form->createView(),
+                    'errors' => $errors,
+                    'non_confirme' => "Votre compte est en attente d'activation."
+                ]);
+                return $this->redirectToRoute('acceder_profile');
             }
             
         }
@@ -189,11 +195,8 @@ class AuthenticationController extends AbstractController
           /**
          * @Route("/recuperer-password/{code}")
          */
-        public function verif(string $code, Request $request)
+        public function change_password(string $code, Request $request)
         {
-
-            // check if code is correct
-
             $utilisateur = new Utilisateur();
 
             $form = $this->createFormBuilder($utilisateur)
@@ -201,10 +204,30 @@ class AuthenticationController extends AbstractController
                 ->add('save', SubmitType::class, ['label' => 'Modifier mot de passe'])
                 ->getForm();
 
+            $entityManager = $this->getDoctrine()->getManager();
+            $utilisateur_avec_code = $entityManager
+                ->getRepository(Utilisateur::class)
+                ->findOneBy(array('code_changement_password'=> $code));
+
+            if (!$utilisateur_avec_code) return $this->render("authentication/recuperer-password.html.twig", [
+                "form" => $form->createView(),
+                "lien_invalide" => "Lien de récupération du compte est invalide"
+            ]);
+            
+
             $form->handleRequest($request);
 
             if ($form->isSubmitted()) {
-                // modify user password
+                if (!$this->password_is_valid($utilisateur->getMotDePasse())) return $this->render("authentication/recuperer-password.html.twig", [
+                    "form" => $form->createView(),
+                    "weak_password" => "Le mot de passe doit avoir au moins 8 caractères et contenir un chiffre et un symbole"
+                ]);
+
+                $utilisateur_avec_code->setMotDePasse($utilisateur->getMotDePasse());
+                $utilisateur_avec_code->set_code_changement_password("none");
+                $entityManager->flush();
+
+                return $this->redirectToRoute('/authentication/login');
             }
 
             return $this->render("authentication/recuperer-password.html.twig", [
@@ -266,6 +289,15 @@ class AuthenticationController extends AbstractController
             $utilisateur->set_email_confirme(1);
             $utilisateur->setCodeConfirmationEmail("");
             $entityManager->flush();
+
+            // create unverified bank account
+            $compte_bancaire = new CompteBancaire();
+            $compte_bancaire->setIdCompte($utilisateur);
+            $compte_bancaire->setConfirme(0);
+            $compte_bancaire->setStatus(0);
+            $entityManager->persist($compte_bancaire);
+            $entityManager->flush();
+
             // return success message
             return $this->render("authentication/verifier-email.html.twig");
         }
