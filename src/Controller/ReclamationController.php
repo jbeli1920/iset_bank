@@ -19,11 +19,21 @@ class ReclamationController extends AbstractController
     }
 
      /**
-     * @Route("/reclamation/voir", name="app_reclamation")
+     * @Route("/reclamation/voir")
      */
-    public function voir_reclamation(): Response
+    public function voir_reclamation_admin(): Response
     {
         return $this->render('reclamation/index.html.twig', [
+            'controller_name' => 'ReclamationController',
+        ]);
+    }
+
+    /**
+     * @Route("/reclamation/mes-reclamations")
+     */
+    public function voir_reclamation_client(): Response
+    {
+        return $this->render('reclamation/mes-reclamations.html.twig', [
             'controller_name' => 'ReclamationController',
         ]);
     }

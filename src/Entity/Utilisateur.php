@@ -54,14 +54,23 @@ class Utilisateur
      */
     private $profil;
 
-   /**
- * @ORM\Column(type="integer")
- */
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $code_changement_password;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
     private $email_confirme;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function get_code_changement_password(): ?string {
+        return $this->code_changement_password;
     }
 
     public function get_email_confirme(): ?int
@@ -78,6 +87,12 @@ class Utilisateur
     {
         $this->nom = $nom;
 
+        return $this;
+    }
+
+    public function set_code_changement_password(string $code): self {
+        $this->code_changement_password = $code;
+        
         return $this;
     }
 
@@ -100,7 +115,7 @@ class Utilisateur
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getemail(): ?string
     {
         return $this->email;
     }
