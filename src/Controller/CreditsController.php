@@ -17,5 +17,13 @@ class CreditsController extends AbstractController
             'controller_name' => 'ProfileController',
         ]);
     }
-     
+      /**
+     * @Route("/credits/voir")
+     */
+    public function voir_credits(): Response
+    {
+        return $this->render('credits/voir-credits.html.twig', [
+            'controller_name' => 'ProfileController',
+        ]);
+    }
 }

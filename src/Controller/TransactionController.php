@@ -26,7 +26,7 @@ class TransactionController extends AbstractController
      */
     public function afficher_historique_admin(): Response
     {
-        return $this->render('transaction/index.html.twig', [
+        return $this->render('transaction/historique_transaction.html.twig', [
             'controller_name' => 'TransactionController',
         ]);
     }
