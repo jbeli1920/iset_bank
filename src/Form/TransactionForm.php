@@ -21,7 +21,7 @@ class TransactionForm extends AbstractType
             ->add('montant', NumberType::class, [
                 'label' => 'Montant',
             ])
-            ->add('mot_de_passe', NumberType::class, [
+            ->add('mot_de_passe', TextType::class, [
                 'label' => 'Mot de passe',
             ])
             ->add('save', SubmitType::class, [

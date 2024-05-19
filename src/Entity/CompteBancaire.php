@@ -51,13 +51,14 @@ class CompteBancaire
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="id_compte_bancaire", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compte_destinaire", orphanRemoval=true)
      */
-    private $transactions;
+    private $transaction;
 
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
+        $this->transaction = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,16 +138,16 @@ class CompteBancaire
     /**
      * @return Collection<int, Transaction>
      */
-    public function getTransactions(): Collection
+    public function getTransaction(): Collection
     {
-        return $this->transactions;
+        return $this->transaction;
     }
 
     public function addTransaction(Transaction $transaction): self
     {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions[] = $transaction;
-            $transaction->setIdCompteBancaire($this);
+        if (!$this->transaction->contains($transaction)) {
+            $this->transaction[] = $transaction;
+            $transaction->setCompteDestinaire($this);
         }
 
         return $this;
@@ -154,14 +155,18 @@ class CompteBancaire
 
     public function removeTransaction(Transaction $transaction): self
     {
-        if ($this->transactions->removeElement($transaction)) {
+        if ($this->transaction->removeElement($transaction)) {
             // set the owning side to null (unless already changed)
-            if ($transaction->getIdCompteBancaire() === $this) {
-                $transaction->setIdCompteBancaire(null);
+            if ($transaction->getCompteDestinaire() === $this) {
+                $transaction->setCompteDestinaire(null);
             }
         }
 
         return $this;
     }
+
+    
+
+   
 
 }

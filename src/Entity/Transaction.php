@@ -20,7 +20,27 @@ class Transaction
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $destinaire;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $destinataire;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $date;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom_destinaire;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom_destinataire;
 
     /**
      * @ORM\Column(type="float")
@@ -28,20 +48,26 @@ class Transaction
     private $montant;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $date;
-
-
-    /**
-     * @ORM\ManyToOne(targetEntity=CompteBancaire::class, inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity=CompteBancaire::class, inversedBy="transaction")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $id_compte_bancaire;
+    private $compte_destinaire;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getDestinaire(): ?string
+    {
+        return $this->destinaire;
+    }
+
+    public function setDestinaire(string $destinaire): self
+    {
+        $this->destinaire = $destinaire;
+
+        return $this;
     }
 
     public function getDestinataire(): ?string
@@ -52,18 +78,6 @@ class Transaction
     public function setDestinataire(string $destinataire): self
     {
         $this->destinataire = $destinataire;
-
-        return $this;
-    }
-
-    public function getMontant(): ?float
-    {
-        return $this->montant;
-    }
-
-    public function setMontant(float $montant): self
-    {
-        $this->montant = $montant;
 
         return $this;
     }
@@ -80,14 +94,50 @@ class Transaction
         return $this;
     }
 
-    public function getIdCompteBancaire(): ?CompteBancaire
+    public function getNomDestinaire(): ?string
     {
-        return $this->id_compte_bancaire;
+        return $this->nom_destinaire;
     }
 
-    public function setIdCompteBancaire(?CompteBancaire $id_compte_bancaire): self
+    public function setNomDestinaire(string $nom_destinaire): self
     {
-        $this->id_compte_bancaire = $id_compte_bancaire;
+        $this->nom_destinaire = $nom_destinaire;
+
+        return $this;
+    }
+
+    public function getNomDestinataire(): ?string
+    {
+        return $this->nom_destinataire;
+    }
+
+    public function setNomDestinataire(string $nom_destinataire): self
+    {
+        $this->nom_destinataire = $nom_destinataire;
+
+        return $this;
+    }
+
+    public function getMontant(): ?float
+    {
+        return $this->montant;
+    }
+
+    public function setMontant(float $montant): self
+    {
+        $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getCompteDestinaire(): ?CompteBancaire
+    {
+        return $this->compte_destinaire;
+    }
+
+    public function setCompteDestinaire(?CompteBancaire $compte_destinaire): self
+    {
+        $this->compte_destinaire = $compte_destinaire;
 
         return $this;
     }

@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TransactionController extends AbstractController
 {
@@ -41,6 +41,19 @@ class TransactionController extends AbstractController
 
         $user = $session->get('user');
 
+        $mon_compte = $this->getDoctrine()
+            ->getRepository(Utilisateur::class)
+            ->find($user['id_utilisateur']);
+
+        $mon_compte = $mon_compte->getCompteBancaire();
+
+        $transactions_envoye = $this->getDoctrine()
+            ->getRepository(Transaction::class)
+            ->findBy(array('destinaire' => $mon_compte->getNumeroCarte()));
+
+        $transactions_recu = $this->getDoctrine()
+            ->getRepository(Transaction::class)
+            ->findBy(array('destinataire' => $mon_compte->getNumeroCarte()));
         
          $form = $this->createForm(TransactionForm::class);
 
@@ -56,7 +69,7 @@ class TransactionController extends AbstractController
                 'erreur_destinataire' => "Destinataire n'est pas trouvé"
             ]);
             
-            if ($data['montant'] > $user['solde']) return $this->render('transaction/mes-transactions.html.twig', [
+            if ($data['montant'] >$user['solde']) return $this->render('transaction/mes-transactions.html.twig', [
                 'form' => $form->createView(),
                 'erreur_solde' => 'Votre solde est insuffisant'
             ]);
@@ -75,12 +88,28 @@ class TransactionController extends AbstractController
                 'erreur_password' => 'Mot de passe est incorrect'
             ]);
             // make the transaction
+            $destinataire->setSolde( $destinataire->getSolde() + $data['montant'] );
+            $destinaire = $compte->getCompteBancaire();
+            $destinaire->setSolde($destinaire->getSolde() - $data['montant'] );
+          
+            $transaction = new Transaction();
+            $transaction->setDestinataire($data['destinataire']);
+            $transaction->setDate(date('d-m-Y H:i'));
+            $transaction->setMontant($data['montant']);
+            $transaction->setNomDestinataire($destinataire->getIdCompte()->getNom());
+            $transaction->setNomDestinaire($destinaire->getIdCompte()->getNom());
+            $transaction->setDestinaire($destinaire->getNumeroCarte());
+            $transaction->setCompteDestinaire($destinaire);
+            $entityManager->persist($transaction);
+            $entityManager->flush();
             // success message
-            return new Response($user['solde']);
+            return new Response("yes");
         }
 
         return $this->render('transaction/mes-transactions.html.twig', [
             'form' => $form->createView(),
+            'transactions' => array_merge($transactions_envoye, $transactions_recu),
+            'code_carte' => $mon_compte->getNumeroCarte()
         ]);
     }
 
