@@ -13,15 +13,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class AuthenticationController extends AbstractController
 {
          /**
-         * @Route("/authentication/login")
+         * @Route("/authentication/login", name="login")
          */
-    public function login(Request $request)
+    public function login(Request $request, SessionInterface $session)
     {
+
+        $session->remove('user');
+
         $utilisateur = new Utilisateur();
 
         $form = $this->createFormBuilder($utilisateur)
@@ -62,11 +66,18 @@ class AuthenticationController extends AbstractController
                 ]);
             } else {
                 if ($utilisateur_a_connecter->get_email_confirme() == 0) return $this->redirect("http://localhost:8000/authentication/verif_email/" . $utilisateur_a_connecter->getEmail());
-                if ($utilisateur_a_connecter->getCompteBancaire()->getConfirme() == 0)  return $this->render("authentication/signin.html.twig", [
+                $compte_bancaire = $utilisateur_a_connecter->getCompteBancaire();
+                if ($compte_bancaire->getConfirme() == 0)  return $this->render("authentication/signin.html.twig", [
                     'form' => $form->createView(),
                     'errors' => $errors,
                     'non_confirme' => "Votre compte est en attente d'activation."
                 ]);
+
+                $session->set('user', array(
+                    'solde' => $compte_bancaire->getSolde(),
+                    'id_utilisateur' => $utilisateur_a_connecter->getId()
+                ));
+
                 return $this->redirectToRoute('acceder_profile');
             }
             

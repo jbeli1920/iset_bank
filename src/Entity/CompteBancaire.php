@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompteBancaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,6 +49,16 @@ class CompteBancaire
      * @ORM\Column(type="integer")
      */
     private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="id_compte_bancaire", orphanRemoval=true)
+     */
+    private $transactions;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +131,36 @@ class CompteBancaire
 
     public function setStatus(int $status): self {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setIdCompteBancaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getIdCompteBancaire() === $this) {
+                $transaction->setIdCompteBancaire(null);
+            }
+        }
+
         return $this;
     }
 

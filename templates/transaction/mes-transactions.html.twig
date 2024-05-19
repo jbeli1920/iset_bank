@@ -7,11 +7,14 @@
   <title>
     Espace Administration
   </title>
+  
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
    {% block stylesheets %}
         <link href="{{ asset('styles/signup.css') }}" type="text/css" rel="stylesheet" />
     {% endblock %}
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
+  
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -81,14 +84,19 @@
                   <h6 class="mb-0">Historique de transactions</h6>
                 </div>
                 <div class="col-6 text-end">
-                  <button class="btn btn-outline-success btn-sm mb-0">Nouveau transaction</button>
+                  <button class="btn btn-outline-success btn-sm mb-0" data-bs-toggle="modal" data-bs-target="#exampleModal">Nouveau transaction</button>
                 </div>
               </div>
                 </div>
               </div>
             </div>
             <div class="card-body pt-4 p-3">
-              
+              {% if erreur_destinataire is defined %}
+                <div class="alert alert-danger"> <span class="text-white">{{ erreur_destinataire }}</span> </div>
+              {% endif %}
+              {% if erreur_solde is defined %}
+                <div class="alert alert-danger"> <span class="text-white">{{ erreur_solde }}</span> </div>
+              {% endif %}
               <ul class="list-group">
                 <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                   <div class="d-flex align-items-center">
@@ -189,6 +197,46 @@
               </ul>
               
             </div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-success">
+        <h5 class="modal-title font-weight-normal text-white" id="exampleModalLabel">Nouveau transaction</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{ form_start(form) }}
+          <div class="input-group input-group-outline my-3">
+            {{ form_widget(form.destinataire, { 'attr': {'class': 'form-control', 'placeholder': 'Destinataire' } }) }}
+          </div>
+          
+          <div class="input-group input-group-outline my-3">
+            {{ form_widget(form.montant, { 'attr': {'class': 'form-control', 'placeholder': 'Montant', 'type': 'number' } }) }}
+          </div>
+            <div class="input-group input-group-outline my-3">
+              {{ form_widget(form.mot_de_passe, { 'attr': {'class': 'form-control', 'placeholder': 'Mot de passe' } }) }}
+            </div>
+          {{ form_widget(form.save, { 'attr': {'class': 'btn bg-gradient-success' } }) }}
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+</div>
+
   </main>
+
+  <script src="{{ asset('scripts/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('scripts/popper.min.js') }}"></script>
+
+
 </body>
+
 </html>
