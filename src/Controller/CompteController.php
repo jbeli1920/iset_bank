@@ -56,6 +56,19 @@ class CompteController extends AbstractController
         ]);
 
     }
+     /**
+     * @Route("/compte/voir_demande_compte")
+     */
+    public function voir_demande_compte()
+    {
+        $utilisateur = $this->getDoctrine()
+        ->getRepository(Utilisateur::class)
+        ->findAll();
+        return $this->render('compte/voir-demande-compte.html.twig',[
+            'utilisateur' =>  $utilisateur
+        ]);
+
+    }
 
 
 }

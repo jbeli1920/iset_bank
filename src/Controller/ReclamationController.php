@@ -23,7 +23,7 @@ class ReclamationController extends AbstractController
      */
     public function voir_reclamation_admin(): Response
     {
-        return $this->render('reclamation/index.html.twig', [
+        return $this->render('reclamation/voir-reclamation.html.twig', [
             'controller_name' => 'ReclamationController',
         ]);
     }
