@@ -44,7 +44,7 @@ class TransactionController extends AbstractController
         
          $form = $this->createForm(TransactionForm::class);
 
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
@@ -64,6 +64,16 @@ class TransactionController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             
             // check if password is correct
+            $compte = $this->getDoctrine()
+            ->getRepository(Utilisateur::class)
+            ->find($user['id_utilisateur']);
+
+
+
+            if ($compte->getMotDePasse() != $data['mot_de_passe']) return $this->render('transaction/mes-transactions.html.twig', [
+                'form' => $form->createView(),
+                'erreur_password' => 'Mot de passe est incorrect'
+            ]);
             // make the transaction
             // success message
             return new Response($user['solde']);

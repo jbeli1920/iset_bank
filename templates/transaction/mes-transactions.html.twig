@@ -97,6 +97,9 @@
               {% if erreur_solde is defined %}
                 <div class="alert alert-danger"> <span class="text-white">{{ erreur_solde }}</span> </div>
               {% endif %}
+              {% if erreur_password is defined %}
+                <div class="alert alert-danger"> <span class="text-white">{{ erreur_password }}</span> </div>
+              {% endif %}
               <ul class="list-group">
                 <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                   <div class="d-flex align-items-center">
