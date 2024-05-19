@@ -64,6 +64,12 @@ class Utilisateur
      */
     private $email_confirme;
 
+    /**
+     * @ORM\OneToOne(targetEntity=CompteBancaire::class, mappedBy="id_compte", cascade={"persist", "remove"})
+     */
+    private $compteBancaire;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -162,4 +168,22 @@ class Utilisateur
 
         return $this;
     }
+
+    public function getCompteBancaire(): ?CompteBancaire
+    {
+        return $this->compteBancaire;
+    }
+
+    public function setCompteBancaire(CompteBancaire $compteBancaire): self
+    {
+        // set the owning side of the relation if necessary
+        if ($compteBancaire->getIdCompte() !== $this) {
+            $compteBancaire->setIdCompte($this);
+        }
+
+        $this->compteBancaire = $compteBancaire;
+
+        return $this;
+    }
+
 }

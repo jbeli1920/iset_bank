@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends AbstractController
 {
     /**
-     * @Route("/profile/acceder")
+     * @Route("/profile/acceder", name="acceder_profile")
      */
     public function acceder_profile(): Response
     {
