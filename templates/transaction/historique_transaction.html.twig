@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white" href="">
+          <a class="nav-link text-white" href="/compte/statistique">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -43,7 +43,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-success" href="/reclamation/voir">
+          <a class="nav-link text-white" href="/reclamation/voir">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">help</i>
             </div>
@@ -67,7 +67,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/transaction/historique">
+          <a class="nav-link text-white active bg-gradient-success" >
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">sync_alt</i>
             </div>
@@ -102,35 +102,45 @@
             </div>
             <div class="card-body pt-4 p-3">
               <ul class="list-group">
-                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center">
-                      <i class="material-icons text-lg">expand_less</i>
-                    </button>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-1 text-dark text-sm">abd aziz</h6>
-                      <span class="text-xs">26 March 2024, at 12:30 PM</span>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold ms-auto">
-                    + $ 1,000
-                  </div>
-                </li>
-             
-                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center">
-                      <i class="material-icons text-lg">expand_more</i>
-                    </button>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-1 text-dark text-sm">hamdi</h6>
-                      <span class="text-xs">27 March 2024, at 12:30 PM</span>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold ms-auto">
-                    - $ 2,500
-                  </div>
-                </li>
+                    {% for tran in Transaction %}
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center">
+                          <i class="material-icons text-lg">expand_less</i>
+                        </button>
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-1 text-dark text-sm">{{ tran.nomDestinaire }}</h6>
+                          <span class="text-xs">{{ tran.date | date('d M Y, \\a\\t h:i A') }}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold ms-auto">
+                        +  {{ tran.montant }} TND
+                      </div>
+                    </li>
+                    
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center">
+                          <i class="material-icons text-lg">expand_more</i>
+                        </button>
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-1 text-dark text-sm">{{ tran.nomDestinataire }}</h6>
+                          <span class="text-xs">{{ tran.date | date('d M Y, \\a\\t h:i A') }}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold ms-auto">
+                        -  {{ tran.montant }} TND
+                      </div>
+                    </li>
+                  {% else %}
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <div class="my-auto">
+                          <h6 class="mb-0 text-sm">Aucune transaction trouvée</h6>
+                        </div>
+                      </div>
+                    </li>
+                  {% endfor %}
            
               </ul>
             </div>

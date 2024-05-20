@@ -22,15 +22,7 @@ class TransactionController extends AbstractController
     
 
 
-    /**
-     * @Route("/transaction/historique")
-     */
-    public function afficher_historique_admin(): Response
-    {
-        return $this->render('transaction/historique_transaction.html.twig', [
-            'controller_name' => 'TransactionController',
-        ]);
-    }
+   
 
     /**
      * @Route("/transaction/mes-transactions")
@@ -132,7 +124,17 @@ class TransactionController extends AbstractController
         });
         return $array;
     }
+      /**
+     * @Route("/transaction/historique")
+     */
+    public function afficher_transaction()
+    {
+  $Transaction = $this->getDoctrine()
+        ->getRepository(Transaction::class)
+        ->findAll();
+        return $this->render("transaction/historique_transaction.html.twig", [
+            'Transaction' =>  $Transaction
+        ]);
 
-
-
+}
 }

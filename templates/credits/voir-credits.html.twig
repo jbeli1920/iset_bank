@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white" href="">
+          <a class="nav-link text-white" href="/compte/statistique">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -43,7 +43,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-success" href="/reclamation/voir">
+          <a class="nav-link text-white " href="/reclamation/voir">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">help</i>
             </div>
@@ -51,15 +51,15 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/compte/voir_demande_compte">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+          <a class="nav-link text-white " href="/compte/voir_demande_compte">
+            <div class="text-white text-center  me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
             <span class="nav-link-text ms-1">Demandes de compte</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/credits/voir">
+          <a class="nav-link text-white active bg-gradient-success" >
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">payments</i>
             </div>
@@ -104,13 +104,14 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Personne</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Combien</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Raison</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Compéton</th>
-                      <th>   </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Nombre de mois</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">  montant de mois </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td>
+                         {% for Deman in DemandeCredit %}
                         <div class="d-flex px-2">
                         <div>
                           <img src="{{ asset('../images/user.jpg') }}" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
@@ -122,58 +123,34 @@
                         </div>
                       </td>
                       <td>
-                        <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                        <p class="text-sm font-weight-bold mb-0">{{Deman.montant}} DNT</p>
                       </td>
                       <td>
-                        <span class="text-xs font-weight-bold">bech ne5ou dar</span>
+                        <span class="text-xs font-weight-bold">{{Deman.raison}}</span>
                       </td>
                       <td class="align-middle text-center">
                         <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">60%</span>
+                          <span class="me-2 text-xs font-weight-bold">{{ Deman.nbrMois }}</span>
                           <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                            </div>
+                          
+                          </div>
+                        </div>
+                      </td>
+                         <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">{{ Deman.montantMois }}</span>
+                          <div>
+                          
                           </div>
                         </div>
                       </td>
                       <td class="align-middle">
-                         <a class="btn btn-success btn-sm">Accepter</a>
-                        <a class="btn btn-danger btn-sm">Refuser</a>
+                 <a class="btn btn-success btn-sm" href="/credits/accepter/{{ Deman.id }}">Accepter</a>
+                        <a class="btn btn-danger btn-sm"href="">Refuser</a>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                         <div>
-                          <img src="{{ asset('../images/user.jpg') }}" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
 
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">abd aziz</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$5,000</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">voiture</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">100%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                     <td class="align-middle">
-                         <a class="btn btn-success btn-sm">Accepter</a>
-                        <a class="btn btn-danger btn-sm">Refuser</a>
-                      </td>
                     </tr>
+                      {% endfor %}
+                   
                </table>
                    

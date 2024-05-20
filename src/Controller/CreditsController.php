@@ -14,6 +14,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class CreditsController extends AbstractController
 {
     /**
+     * @Route("/credits/voir")
+     */
+public function voirCredit(): Response
+ 
+{      $DemandeCredit = $this->getDoctrine()
+    ->getRepository(DemandeCredit::class)
+    ->findAll();
+    return $this->render("credits/voir-credits.html.twig", [
+        'DemandeCredit' =>  $DemandeCredit
+    ]);
+    
+}
+    /**
+     *  @Route("/credits/accepter/{id}")
+     */
+    public function accepter_credits(Request $request, int $id): Response
+ 
+    {       $entityManager = $this->getDoctrine()->getManager();
+        $DemandeCredit = $entityManager->getRepository(DemandeCredit::class)->find($id);
+        $DemandeCredit->setStatus(1);
+        $entityManager->persist($DemandeCredit);
+        $entityManager->flush();
+        return new Response("hihi");
+        
+    }
+    /**
      * @Route("/credits/mes-credits")
      */
     public function acceder_profile(Request $request, SessionInterface $session): Response

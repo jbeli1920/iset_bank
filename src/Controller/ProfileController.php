@@ -62,5 +62,16 @@ class ProfileController extends AbstractController
         });
         return $array;
     }
+       /**
+     * @Route("/compte/statistique")
+     */
+public function voirCredit(): Response
+ 
+{     
+    return $this->render("compte/satistique.html.twig");
+    
+}
+    
 
 }
+

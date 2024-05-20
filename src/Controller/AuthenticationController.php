@@ -18,8 +18,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AuthenticationController extends AbstractController
 {
-         /**
-         * @Route("/authentication/login", name="login")
+         /**uthentication/login
+         * @Route("/a", name="login")
          */
     public function login(Request $request, SessionInterface $session)
     {

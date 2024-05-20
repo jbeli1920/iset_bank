@@ -67,7 +67,7 @@ class CompteBancaire
 
     public function __construct()
     {
-        $this->transactions = new ArrayCollection();
+       
         $this->transaction = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->demandeCredits = new ArrayCollection();

@@ -74,6 +74,12 @@ class Utilisateur
     {
         return $this->id;
     }
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function get_code_changement_password(): ?string {
         return $this->code_changement_password;
