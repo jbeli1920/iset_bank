@@ -70,40 +70,83 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <br>
         <div class="card">
-            <div class="card-header pb-0 px-3">
+            <div class="card-header pb-0 px-3 px-3 bg-gradient-success shadow-primary border-radius-lg pt-4 pb-3">
               <div class="row">
                 <div class="col-6 d-flex align-items-center">
-                  <h6 class="mb-0">Vos demandes de credits</h6>
+                  <h6 class="mb-0 text-white">Vos demandes de credits</h6>
                 </div>
                 <div class="col-6 text-end">
-                  <button class="btn btn-outline-success btn-sm mb-0">Demander un credit</button>
+                  <button class="btn btn-outline-white btn-sm mb-0" data-bs-toggle="modal" data-bs-target="#exampleModal">Demander un credit</button>
                 </div>
               </div>
             </div>
             <div class="card-body pt-4 p-3">
               <ul class="list-group">
-                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                
+                {% for demande in demandes %}
+                  <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
                   <div class="d-flex flex-column">
                     <h6 class="mb-3 text-sm">Description du credit</h6>
-                    <span class="mb-2 text-xs">Montant: <span class="text-dark font-weight-bold ms-sm-2">2000 DT</span></span>
-                    <span class="mb-2 text-xs">Date: <span class="text-dark ms-sm-2 font-weight-bold">16 May 2024</span></span>
-                    <span class="text-xs">Status: <span class="text-success ms-sm-2 font-weight-bold">Votre demande credit a ete accepté</span></span>
+                    <span class="mb-2 text-xs">Raison: <span class="text-dark font-weight-bold ms-sm-2"> {{ demande.raison }}</span></span>
+                    <span class="mb-2 text-xs">Montant: <span class="text-dark font-weight-bold ms-sm-2"> {{ demande.montant }} TND </span></span>
+                    <span class="mb-2 text-xs">Date: <span class="text-dark ms-sm-2 font-weight-bold"> {{ demande.date }} </span></span>
+                    {% if demande.status == 0 %}
+                      <span class="text-xs">Status: <span class="ms-sm-2 font-weight-bold">Votre demande credit est en attente de repondre</span></span>
+                    {% endif %}
+                    {% if demande.status == 1 %}
+                      
+                      <span class="mb-2 text-xs">Nombre du mois: <span class="text-dark font-weight-bold ms-sm-2"> {{ demande.nbrMois }} </span></span>
+                      <span class="mb-2 text-xs">Montant du mois: <span class="text-dark font-weight-bold ms-sm-2"> {{ demande.montantMois }} TND </span></span>
+                      <span class="mb-2 text-xs">Status: <span class=" text-success ms-sm-2 font-weight-bold">Votre demande credit a ete accepte</span></span>
+                    {% endif %}
+                    {% if demande.status == -1 %}
+                      <span class="text-xs">Status: <span class=" text-danger ms-sm-2 font-weight-bold">Votre demande credit a ete refuse</span></span>
+                    {% endif %}
                   </div>
                 </li>
+                {% endfor %}
 
-                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                  <div class="d-flex flex-column">
-                    <h6 class="mb-3 text-sm">Description du credit</h6>
-                    <span class="mb-2 text-xs">Montant: <span class="text-dark font-weight-bold ms-sm-2">1000 DT</span></span>
-                    <span class="mb-2 text-xs">Date: <span class="text-dark ms-sm-2 font-weight-bold">16 May 2024</span></span>
-                    <span class="text-xs">Status: <span class="text-danger ms-sm-2 font-weight-bold">Votre demande de crédit a ete refusé</span></span>
-                  </div>
-                </li>
+               
                 
               </ul>
             </div>
           </div>
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header px-3 bg-gradient-success shadow-primary border-radius-lg pt-4 pb-3">
+        <h5 class="modal-title font-weight-normal text-white" id="exampleModalLabel">Demander un credit</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{ form_start(form) }}
+          <div class="input-group input-group-outline my-3">
+              {{ form_widget(form.montant, { 'attr': {'class': 'form-control', 'placeholder': 'Montant du credit' } }) }}
+          </div>
+          <div class="input-group input-group-outline my-3">
+              {{ form_widget(form.raison, { 'attr': {'class': 'form-control', 'placeholder': 'Raison du credit' } }) }}
+          </div>
+          {{ form_widget(form.save, { 'attr': {'class': 'btn bg-gradient-success' } }) }}
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   </main>
+
+
+  <script src="{{ asset('scripts/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('scripts/popper.min.js') }}"></script>
+
+
 </body>
 </html>

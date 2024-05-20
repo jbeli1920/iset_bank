@@ -55,10 +55,22 @@ class CompteBancaire
      */
     private $transaction;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reclamation::class, mappedBy="compte", orphanRemoval=true)
+     */
+    private $reclamations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DemandeCredit::class, mappedBy="compte", orphanRemoval=true)
+     */
+    private $demandeCredits;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
         $this->transaction = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
+        $this->demandeCredits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,6 +171,66 @@ class CompteBancaire
             // set the owning side to null (unless already changed)
             if ($transaction->getCompteDestinaire() === $this) {
                 $transaction->setCompteDestinaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reclamation>
+     */
+    public function getReclamations(): Collection
+    {
+        return $this->reclamations;
+    }
+
+    public function addReclamation(Reclamation $reclamation): self
+    {
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations[] = $reclamation;
+            $reclamation->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReclamation(Reclamation $reclamation): self
+    {
+        if ($this->reclamations->removeElement($reclamation)) {
+            // set the owning side to null (unless already changed)
+            if ($reclamation->getCompte() === $this) {
+                $reclamation->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DemandeCredit>
+     */
+    public function getDemandeCredits(): Collection
+    {
+        return $this->demandeCredits;
+    }
+
+    public function addDemandeCredit(DemandeCredit $demandeCredit): self
+    {
+        if (!$this->demandeCredits->contains($demandeCredit)) {
+            $this->demandeCredits[] = $demandeCredit;
+            $demandeCredit->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeCredit(DemandeCredit $demandeCredit): self
+    {
+        if ($this->demandeCredits->removeElement($demandeCredit)) {
+            // set the owning side to null (unless already changed)
+            if ($demandeCredit->getCompte() === $this) {
+                $demandeCredit->setCompte(null);
             }
         }
 

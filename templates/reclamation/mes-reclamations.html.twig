@@ -11,7 +11,6 @@
    {% block stylesheets %}
         <link href="{{ asset('styles/signup.css') }}" type="text/css" rel="stylesheet" />
     {% endblock %}
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -71,40 +70,85 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <br>
         <div class="card">
-            <div class="card-header pb-0 px-3">
+            <div class="card-header pb-0 px-3 px-3 bg-gradient-success shadow-primary border-radius-lg pt-4 pb-3">
               <div class="row">
                 <div class="col-6 d-flex align-items-center">
-                  <h6 class="mb-0">Vos reclamations</h6>
+                  <h6 class="mb-0 text-white">Vos reclamations</h6>
                 </div>
                 <div class="col-6 text-end">
-                  <button class="btn btn-outline-success btn-sm mb-0">Ajouter reclamation</button>
+                  <button class="btn btn-outline-white btn-sm mb-0" data-bs-toggle="modal" data-bs-target="#exampleModal">Ajouter reclamation</button>
                 </div>
               </div>
             </div>
             <div class="card-body pt-4 p-3">
               <ul class="list-group">
-                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                  <div class="d-flex flex-column">
-                    <h6 class="mb-3 text-sm">Page de login non fonctionnel</h6>
-                    <span class="mb-2 text-xs">Description: <span class="text-dark font-weight-bold ms-sm-2">La page de connexion indique que le mot de passe est incorrect, même lorsqu'il est correct.</span></span>
-                    <span class="mb-2 text-xs">Date: <span class="text-dark ms-sm-2 font-weight-bold">15 May 2024</span></span>
-                    <span class="text-xs">Status: <span class="text-success ms-sm-2 font-weight-bold">un administrateur a répondu à votre réclamation</span></span>
-                  </div>
+                
+                {% for reclamation in reclamations %}
+                  <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                    <div class="d-flex flex-column">
+                      <h6 class="mb-3 text-sm">{{ reclamation.titre }}</h6>
+                      <span class="mb-2 text-xs">Description: <span class="text-dark font-weight-bold ms-sm-2"> {{ reclamation.description }} </span></span>
+                      <span class="mb-2 text-xs">Date: <span class="text-dark ms-sm-2 font-weight-bold"> {{ reclamation.date }} </span></span>
+                      <span class="text-xs">Status: 
+                      
+                      {% if reclamation.status == 1 %}
+                        <span class="text-success ms-sm-2 font-weight-bold">un administrateur a répondu à votre réclamation</span>
+                      {% endif %}
+
+                      {% if reclamation.status == 0 %}
+                        <span class="text-danger ms-sm-2 font-weight-bold">votre réclamation est en attente de réponse.</span>
+                      {% endif %}
+                      
+                      
+                      </span>
+                    </div>
                 </li>
 
-                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                  <div class="d-flex flex-column">
-                    <h6 class="mb-3 text-sm">Transactions non fonctionnel</h6>
-                    <span class="mb-2 text-xs">Description: <span class="text-dark font-weight-bold ms-sm-2">J'ai essayé de faire une transaction mais l'argent n'arrive pas au destinataire.</span></span>
-                    <span class="mb-2 text-xs">Date: <span class="text-dark ms-sm-2 font-weight-bold">11 May 2024</span></span>
-                    <span class="text-xs">Status: <span class="text-danger ms-sm-2 font-weight-bold">Votre réclamation est en attente de réponse.</span></span>
-                  </div>
-                </li>
+                {% endfor %}
                 
               </ul>
             </div>
           </div>
+
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      
+        <div class="modal-content">
+          <div class="modal-header px-3 bg-gradient-success shadow-primary border-radius-lg pt-4 pb-3">
+            <h5 class="modal-title font-weight-normal text-white" id="exampleModalLabel">Ajouter reclamation</h5>
+            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          {{ form_start(form) }}
+            <div class="input-group input-group-outline my-3">
+              {{ form_widget(form.titre, { 'attr': {'class': 'form-control', 'placeholder': 'Titre du reclamation' } }) }}
+            </div>
+            <div class="input-group input-group-outline my-3">
+              {{ form_widget(form.description, { 'attr': {'class': 'form-control', 'placeholder': 'Description du reclamation' } }) }}
+            </div>
+            {{ form_widget(form.save, { 'attr': {'class': 'btn bg-gradient-success' } }) }}
+          {{ form_end(form) }}
+          </div>
+          
+        </div>
+      
+    </div>
+</div>
+
+
+
+
   </main>
+
+  <script src="{{ asset('scripts/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('scripts/popper.min.js') }}"></script>
+
+
 </body>
 </html>

@@ -6,6 +6,7 @@ use App\Entity\CompteBancaire;
 use App\Entity\Transaction;
 use App\Entity\Utilisateur;
 use App\Form\TransactionForm;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -102,15 +103,36 @@ class TransactionController extends AbstractController
             $transaction->setCompteDestinaire($destinaire);
             $entityManager->persist($transaction);
             $entityManager->flush();
+            if ($transaction->getDestinaire() == $mon_compte->getNumeroCarte()) $transactions_envoye[] = $transaction;
+            else $transactions_recu[] = $transaction;
             // success message
-            return new Response("yes");
+            return $this->render('transaction/mes-transactions.html.twig', [
+                'form' => $form->createView(),
+                'transactions' => $this->sortByDate(array_merge($transactions_envoye, $transactions_recu)),
+                'code_carte' => $mon_compte->getNumeroCarte()
+            ]);
         }
 
         return $this->render('transaction/mes-transactions.html.twig', [
             'form' => $form->createView(),
-            'transactions' => array_merge($transactions_envoye, $transactions_recu),
+            'transactions' => $this->sortByDate(array_merge($transactions_envoye, $transactions_recu)),
             'code_carte' => $mon_compte->getNumeroCarte()
         ]);
     }
+
+
+    function sortByDate($array) {
+        usort($array, function($a, $b) {
+            // Convert the date strings to DateTime objects for comparison
+            $dateA = DateTime::createFromFormat('d-m-Y H:i', $a->getDate());
+            $dateB = DateTime::createFromFormat('d-m-Y H:i', $b->getDate());
+
+            // Compare the dates in descending order
+            return $dateB <=> $dateA;
+        });
+        return $array;
+    }
+
+
 
 }

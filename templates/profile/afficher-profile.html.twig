@@ -82,17 +82,14 @@
                   <span class="mask bg-gradient-dark opacity-10"></span>
                   <div class="card-body position-relative z-index-1 p-3">
                     <i class="material-icons text-white p-2">wifi</i>
-                    <h5 class="text-white mt-4 mb-5 pb-2">4562&nbsp;&nbsp;&nbsp;1122&nbsp;&nbsp;&nbsp;4594&nbsp;&nbsp;&nbsp;7852</h5>
+                    <h5 class="text-white mt-4 mb-5 pb-2"> {{ numero_carte|slice(0, 4) }} &nbsp;&nbsp;&nbsp;{{ numero_carte|slice(4, 4) }}&nbsp;&nbsp;&nbsp;{{ numero_carte|slice(8, 4) }}&nbsp;&nbsp;&nbsp;{{ numero_carte|slice(12, 4) }}</h5>
                     <div class="d-flex">
                       <div class="d-flex">
                         <div class="me-4">
                           <p class="text-white text-sm opacity-8 mb-0">Titulaire du carte</p>
-                          <h6 class="text-white mb-0">Abdelaziz Arfaoui</h6>
+                          <h6 class="text-white mb-0"> {{ nom }} {{ prenom }} </h6>
                         </div>
-                        <div>
-                          <p class="text-white text-sm opacity-8 mb-0">Expires</p>
-                          <h6 class="text-white mb-0">11/22</h6>
-                        </div>
+                        
                       </div>
                       
                     </div>
@@ -112,7 +109,7 @@
                     <div class="card-body pt-0 p-3 text-center">
                       <h6 class="text-center mb-0">Solde</h6>
                       <hr class="horizontal dark my-3">
-                      <h5 class="mb-0">100 DT</h5>
+                      <h5 class="mb-0">{{ solde }} TND</h5>
                     </div>
                   </div>
                 </div>
@@ -126,7 +123,7 @@
                     <div class="card-body pt-0 p-3 text-center">
                       <h6 class="text-center mb-0">Code securité</h6>
                       <hr class="horizontal dark my-3">
-                      <h5 class="mb-0">2474</h5>
+                      <h5 class="mb-0"> {{ code_securite }} </h5>
                     </div>
                   </div>
                 </div>
@@ -149,30 +146,85 @@
             <div class="card-body pt-4 p-3">
               
               <ul class="list-group">
-                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-lg">expand_more</i></button>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-1 text-dark text-sm">Envoyé</h6>
-                      <span class="text-xs">17 May 2024, a 14:28 PM</span>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
-                    - 50 DT
-                  </div>
-                </li>
-                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-lg">expand_less</i></button>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-1 text-dark text-sm">Recu</h6>
-                      <span class="text-xs">17 May 2024, a 17:48 PM</span>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
-                    + 50 DT
-                  </div>
-                </li>
+                
+                {% if transactions[0] is defined %}
+                  {% if transactions[0].destinaire == numero_carte %}
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-lg">expand_less</i></button>
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-1 text-dark text-sm">Envoyé</h6>
+                          <span class="text-xs"> {{ transactions[0].date }} </span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
+                        - {{ transactions[0].montant }} DT
+                      </div>
+                    </li>
+                  {% endif %}
+
+                  {% if transactions[0].destinataire == numero_carte %}
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-lg">expand_more</i></button>
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-1 text-dark text-sm">Recu</h6>
+                          <span class="text-xs"> {{ transactions[0].date }} </span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                        + {{ transactions[0].montant }} DT
+                      </div>
+                    </li>
+                  {% endif %}
+
+
+
+                {% endif %}
+
+
+
+
+              {% if transactions[1] is defined %}
+                  {% if transactions[1].destinaire == numero_carte %}
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-lg">expand_less</i></button>
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-1 text-dark text-sm">Envoyé</h6>
+                          <span class="text-xs"> {{ transactions[1].date }} </span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
+                        - {{ transactions[1].montant }} DT
+                      </div>
+                    </li>
+                  {% endif %}
+
+                  {% if transactions[1].destinataire == numero_carte %}
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 p-3 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-lg">expand_more</i></button>
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-1 text-dark text-sm">Recu</h6>
+                          <span class="text-xs"> {{ transactions[1].date }} </span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                        + {{ transactions[1].montant }} DT
+                      </div>
+                    </li>
+                  {% endif %}
+
+
+
+                {% endif %}
+
+
+                {% if transactions|length ==  0%}
+                  <p class="text-center">Aucune transaction n'a été effectuée sur ce compte.</p>
+                {% endif %}
+                  
               </ul>
               
             </div>
@@ -190,10 +242,10 @@
           <div class="col-auto my-auto">
             <div class="h-100">
               <h5 class="mb-1">
-                Abdelaziz Arfaoui
+                {{ nom }} {{ prenom }}
               </h5>
               <p class="mb-0 font-weight-normal text-sm">
-                Créé le 17 mai 2024
+                Compte client
               </p>
             </div>
           </div>
@@ -205,10 +257,9 @@
               <div class="card card-plain h-100">
                 <div class="card-body p-3">
                   <ul class="list-group">
-                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Nom:</strong> &nbsp; Abdelaziz</li>
-                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Prenom:</strong> &nbsp; Arfaoui</li>
-                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; zonegaming514@gmail.com</li>
-                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mot de passe:</strong> &nbsp; A&21794636</li>
+                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Nom:</strong> &nbsp; {{ nom }}</li>
+                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Prenom:</strong> &nbsp; {{ prenom }} </li>
+                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ email }} </li>
                   </ul>
                 </div>
               </div>
