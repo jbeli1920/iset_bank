@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\DemandeCredit;
 use App\Entity\Utilisateur;
+use App\Form\CreditForm;
 use App\Form\DemandeCreditForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,16 +15,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class CreditsController extends AbstractController
 {
     /**
-     * @Route("/credits/voir")
-     */
-public function voirCredit(): Response
+     * @Route("/credits/voir", name="credits")
+    */
+public function voirCredit(Request $request): Response
  
 {      $DemandeCredit = $this->getDoctrine()
-    ->getRepository(DemandeCredit::class)
-    ->findAll();
-    return $this->render("credits/voir-credits.html.twig", [
-        'DemandeCredit' =>  $DemandeCredit
-    ]);
+        ->getRepository(DemandeCredit::class)
+        ->findAll();
+
+        $DemandeCredit = array_filter($DemandeCredit, function($d) {
+            return $d->getStatus() == 0;
+        });
+
+        $form = $this->createForm(CreditForm::class);
+        $form->handleRequest($request);
+
+        return $this->render("credits/voir-credits.html.twig", [
+            'DemandeCredit' =>  $DemandeCredit,
+            'form' => $form->createView()
+        ]);
     
 }
     /**
@@ -31,14 +41,35 @@ public function voirCredit(): Response
      */
     public function accepter_credits(Request $request, int $id): Response
  
-    {       $entityManager = $this->getDoctrine()->getManager();
+    {       
+        $entityManager = $this->getDoctrine()->getManager();
         $DemandeCredit = $entityManager->getRepository(DemandeCredit::class)->find($id);
         $DemandeCredit->setStatus(1);
+        $DemandeCredit->setNbrMois(3);
+        $DemandeCredit->setMontantMois(3);
         $entityManager->persist($DemandeCredit);
         $entityManager->flush();
-        return new Response("hihi");
+        return $this->redirectToRoute('credits');
         
     }
+
+
+    /**
+     *  @Route("/credits/refuser/{id}")
+     */
+    public function refuser_credits(Request $request, int $id): Response
+ 
+    {       
+        $entityManager = $this->getDoctrine()->getManager();
+        $DemandeCredit = $entityManager->getRepository(DemandeCredit::class)->find($id);
+        $DemandeCredit->setStatus(-1);
+        $entityManager->flush();
+        return $this->redirectToRoute('credits');
+        
+    }
+
+
+
     /**
      * @Route("/credits/mes-credits")
      */

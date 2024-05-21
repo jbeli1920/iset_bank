@@ -21,36 +21,40 @@ public function accepter_compte(Request $request, int $id): Response
     $compteBancaire->setNumeroCarte( '5555' . sprintf('%012d', mt_rand(100000000000, 999999999999) ) );
     $compteBancaire->setCodeSecurite(rand(1000,9999));
     $compteBancaire->setSolde(50);
+    $compteBancaire->setConfirme(1);
+    $compteBancaire->setStatus(1);
     $entityManager->persist($compteBancaire);
     $entityManager->flush();
 
-    return new Response("haha");
+    return $this->redirectToRoute('demandes');
 }
 
 
-    /**
-     * @Route("/compte/modifier/{id}")
-     */
-    public function modifier_compte(int $id): Response
-    {
-        
-        return $this->render('compte/index.html.twig', [
-            'controller_name' => 'CompteController',
-        ]);
-    }
+
+/**
+ * @Route("/compte/refuser/{id}")
+ */
+public function refuser_compte(Request $request, int $id): Response
+{
+    $entityManager = $this->getDoctrine()->getManager();
+    $compteBancaire = $entityManager->getRepository(CompteBancaire::class)->find($id);
+    
+    $utilisateur = $compteBancaire->getIdCompte();
+
+    $entityManager->remove($compteBancaire);
+
+    $entityManager->remove($utilisateur);
+
+    $entityManager->flush();
+
+    return $this->redirectToRoute('demandes');
+}
 
 
-     /**
-     * @Route("/compte/supprimer/{id}")
-     */
-    public function supprimer_compte(int $id): Response
-    {
-        return $this->render('compte/index.html.twig', [
-            'controller_name' => 'CompteController',
-        ]);
-    }
+   
+
     /**
-     * @Route("/compte/affiche")
+     * @Route("/compte/affiche", name="comptes")
      */
     public function affiche_les_compte()
 
@@ -59,22 +63,94 @@ public function accepter_compte(Request $request, int $id): Response
         $utilisateur = $this->getDoctrine()
         ->getRepository(Utilisateur::class)
         ->findAll();
+
+        $comptes_confirmes = array_filter($utilisateur, function(Utilisateur $u) {
+            $c = $u->getCompteBancaire();
+            if (!$c) return false;
+            return $c->getConfirme() == 1;
+        });
+
         return $this->render("compte/affiche.html.twig", [
-            'utilisateur' =>  $utilisateur
+            'utilisateur' =>  $comptes_confirmes
         ]);
 
     }
      /**
-     * @Route("/compte/voir_demande_compte")
+     * @Route("/compte/voir_demande_compte", name="demandes")
      */
     public function voir_demande_compte()
     {
         $utilisateur = $this->getDoctrine()
         ->getRepository(Utilisateur::class)
         ->findAll();
+
+        $comptes_non_confirmes = array_filter($utilisateur, function(Utilisateur $u) {
+            $c = $u->getCompteBancaire();
+            if (!$c) return false;
+            return $c->getConfirme() == 0;
+        });
+
+
         return $this->render('compte/voir-demande-compte.html.twig',[
-            'utilisateur' =>  $utilisateur
+            'utilisateur' =>  $comptes_non_confirmes
         ]);
+
+    }
+
+    /**
+     * @Route("/compte/details/{id}")
+     */
+    public function details_compte(int $id) {
+
+        $utilisateur = $this->getDoctrine()
+        ->getRepository(Utilisateur::class)
+        ->find($id);
+
+        $compte = $utilisateur->getCompteBancaire();
+
+
+        return $this->render('compte/details.html.twig', [
+            'carte' => $compte->getNumeroCarte(),
+            'code_securite' => $compte->getCodeSecurite(),
+            'solde' => $compte->getSolde(),
+            'id' => $id,
+            'status' => $compte->getStatus()
+        ]);
+    }
+
+
+    /**
+     * @Route("/compte/activer/{id}")
+    */
+    public function activer_compte(int $id) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $utilisateur = $this->getDoctrine()
+        ->getRepository(Utilisateur::class)
+        ->find($id);
+
+        $compte = $utilisateur->getCompteBancaire();
+        $compte->setStatus(1);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('comptes');
+
+    }
+
+
+      /**
+     * @Route("/compte/desactiver/{id}")
+    */
+    public function desactiver_compte(int $id) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $utilisateur = $this->getDoctrine()
+        ->getRepository(Utilisateur::class)
+        ->find($id);
+
+        $compte = $utilisateur->getCompteBancaire();
+        $compte->setStatus(0);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('comptes');
 
     }
 

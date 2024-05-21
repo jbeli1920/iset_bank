@@ -18,8 +18,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AuthenticationController extends AbstractController
 {
-         /**uthentication/login
-         * @Route("/a", name="login")
+         /**
+         * @Route("/authentication/login", name="login")
          */
     public function login(Request $request, SessionInterface $session)
     {
@@ -78,7 +78,13 @@ class AuthenticationController extends AbstractController
                     'id_utilisateur' => $utilisateur_a_connecter->getId()
                 ));
 
-                return $this->redirectToRoute('acceder_profile');
+                if ($utilisateur_a_connecter->getProfil() == "client") {
+                    return $this->redirectToRoute('acceder_profile');
+                } else {
+                    return $this->redirectToRoute('comptes');
+                }
+
+                
             }
             
         }

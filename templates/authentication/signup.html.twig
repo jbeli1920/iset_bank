@@ -65,12 +65,7 @@
                       {{ form_widget(form.mot_de_passe, {'attr': {'class': 'form-control', 'type': 'password', 'placeholder': 'Mot de passe'} }) }}
                     </div>
                     <p style="color: red" class="mt-4 text-sm">{{ errors['password'] }}</p>
-                    <div class="form-check form-check-info text-start ps-0">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-                      <label class="form-check-label" for="flexCheckDefault">
-                        J'accepte les <a href="javascript:;" class="text-success font-weight-bolder">Conditions Générales d'Utilisation</a>
-                      </label>
-                    </div>
+                    
                     <div class="text-center">
                         {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg bg-gradient-success btn-lg w-100 mt-4 mb-0', 'type': 'submit'} }) }}
                     </div>
